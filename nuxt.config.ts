@@ -52,7 +52,18 @@ const config: Configuration = {
     }
   },
   buildModules: [
-    '@nuxt/typescript-build'
+    '@nuxt/typescript-build',
+    function () {
+      this.extendBuild((config, { isClient, isModern }) => {
+        // @ts-ignore
+        const tsRules = config.module.rules.filter(r => r.test.test('.tsx') || r.test.test('.ts'))
+
+        tsRules.forEach((rule) => {
+          // @ts-ignore
+          rule.use.unshift('vue-hot-reload-loader')
+        })
+      })
+    }
   ]
 }
 
